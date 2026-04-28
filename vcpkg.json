@@ -1,0 +1,15 @@
+{
+  "name": "tomato-server",
+  "version-string": "0.1.0",
+  "builtin-baseline": "45584838600443249a4fdf1de5f87df867eaba8e",
+  "dependencies": [
+    {
+      "name": "drogon",
+      "features": [
+        "sqlite3"
+      ]
+    },
+    "sqlite3",
+    "libsodium"
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "bindAddress": "0.0.0.0",
+  "httpsPort": 8443,
+  "tlsCertPath": "config/dev-cert.pem",
+  "tlsKeyPath": "config/dev-key.pem",
+  "sqlitePath": "storage/db/tomato.db",
+  "migrationsDir": "migrations",
+  "dbConnectionCount": 1,
+  "threadCount": 1
+}
