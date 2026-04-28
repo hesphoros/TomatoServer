@@ -14,7 +14,71 @@ TomatoServer 是基于 Drogon + SQLite 的聊天后端（Jetchat 场景）。
 
 - CMake 3.21+
 - vcpkg（并设置 `VCPKG_ROOT`）
-- OpenSSL（生成本地 HTTPS 证书）
+- OpenSSL（生成本地 HTTPS 证书；命令行工具即可，用于签发 `dev-cert.pem`）
+
+## vcpkg 依赖安装
+
+仓库根目录已有 **`vcpkg.json`**（manifest），声明的包为：
+
+| 包名 | 说明 |
+|------|------|
+| `drogon[sqlite3]` | HTTP 框架，并启用 sqlite3 相关能力 |
+| `sqlite3` | SQLite（CMake 里为 `unofficial-sqlite3`） |
+| `libsodium` | Argon2id 等（CMake 里为 `unofficial-sodium`） |
+
+### 推荐：在 TomatoServer 根目录用 manifest 安装
+
+先克隆/引导好 [vcpkg](https://github.com/microsoft/vcpkg)，设置环境变量 **`VCPKG_ROOT`** 指向 vcpkg 根目录。
+
+**Windows（x64 示例）：** 在 `TomatoServer` 目录下执行：
+
+```powershell
+$env:VCPKG_ROOT = "D:\path\to\vcpkg"   # 按你的实际路径修改
+& "$env:VCPKG_ROOT\bootstrap-vcpkg.bat"
+& "$env:VCPKG_ROOT\vcpkg.exe" install --triplet x64-windows
+```
+
+**Linux（x64 示例）：**
+
+```bash
+export VCPKG_ROOT=/path/to/vcpkg   # 按你的实际路径修改
+"$VCPKG_ROOT/bootstrap-vcpkg.sh"
+"$VCPKG_ROOT/vcpkg" install --triplet x64-linux
+```
+
+**macOS（Apple Silicon 示例）：**
+
+```bash
+export VCPKG_ROOT=/path/to/vcpkg
+"$VCPKG_ROOT/bootstrap-vcpkg.sh"
+"$VCPKG_ROOT/vcpkg" install --triplet arm64-osx
+```
+
+`vcpkg` 会读取当前目录的 **`vcpkg.json`**，自动安装其中列出的依赖（含 `drogon[sqlite3]`、`sqlite3`、`libsodium`）。
+
+### 不配 manifest、手动指定包（等价）
+
+若你希望在任意目录一条命令装齐（三元组请自行替换）：
+
+```text
+vcpkg install drogon[sqlite3]:x64-linux sqlite3:x64-linux libsodium:x64-linux
+```
+
+Windows 将 `x64-linux` 换成 `x64-windows` 等即可。
+
+### CMake 指向 vcpkg 工具链
+
+配置工程时加上（路径按本机修改）：
+
+```text
+-DCMAKE_TOOLCHAIN_FILE=%VCPKG_ROOT%\scripts\buildsystems\vcpkg.cmake
+```
+
+Linux / macOS：
+
+```text
+-DCMAKE_TOOLCHAIN_FILE=$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake
+```
 
 ## 配置说明
 
@@ -62,3 +126,6 @@ openssl req -x509 -nodes -newkey rsa:2048 `
 - `ruansiqi / ruansiqi`
 
 并自动建立双向好友关系与 direct 会话。
+
+
+vcpkg install drogon[sqlite3]:x64-linux sqlite3:x64-linux libsodium:x64-linux
