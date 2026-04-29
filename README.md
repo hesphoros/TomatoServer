@@ -129,3 +129,11 @@ openssl req -x509 -nodes -newkey rsa:2048 `
 
 
 vcpkg install drogon[sqlite3]:x64-linux sqlite3:x64-linux libsodium:x64-linux
+
+cd /path/to/TomatoServer
+cmake -S . -B build -G Ninja \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DCMAKE_TOOLCHAIN_FILE="/root/vcpkg/scripts/buildsystems/vcpkg.cmake" \
+  -DVCPKG_TARGET_TRIPLET=x64-linux
+  
+cmake --build build -j"$(nproc)"
